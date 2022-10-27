@@ -6,6 +6,8 @@
       type="date"
       placeholder="日期"
       size="mini"
+      clearable
+      :editable="false"
       format="yyyy-MM-dd"
       value-format="yyyy/MM/dd"
       @change="getData"
