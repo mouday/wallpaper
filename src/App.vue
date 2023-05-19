@@ -48,7 +48,7 @@ export default {
     return {
       // tableData,
       loading: true,
-      date: dayjs().format('YYYY/MM/DD'),
+      date: dayjs().subtract(1, 'day').format('YYYY/MM/DD'),
       detail: {},
     }
   },
