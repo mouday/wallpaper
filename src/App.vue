@@ -54,15 +54,25 @@
         ></el-button>
       </el-tooltip>
 
-      <el-button
-        style="margin-left: auto"
-        size="mini"
-        type="default"
-        @click="handleDownload"
-      >
-        <i class="el-icon-download"></i>
-        下载</el-button
-      >
+      <div style="margin-left: auto">
+        <el-button
+          size="mini"
+          type="default"
+          @click="handleDownload"
+        >
+          <i class="el-icon-download"></i>
+          下载</el-button
+        >
+        <el-button
+          style="margin-left: 10px;"
+          size="mini"
+          type="default"
+          @click="handleGithub"
+        >
+          <i class="el-icon-message"></i>
+          github</el-button
+        >
+      </div>
     </div>
 
     <div class="description-wrap">
@@ -166,6 +176,10 @@ export default {
       localStorage.setItem(date, viewCount)
 
       this.viewCount = viewCount
+    },
+
+    handleGithub() {
+      window.open('https://github.com/mouday/wallpaper', '_blank')
     },
   },
 
