@@ -1,39 +1,81 @@
 <template>
   <div class="container">
-    <el-date-picker
-      style="width: 140px"
-      v-model="date"
-      type="date"
-      placeholder="日期"
-      size="mini"
-      clearable
-      :editable="false"
-      format="yyyy-MM-dd"
-      value-format="yyyy/MM/dd"
-      @change="getData"
-    >
-    </el-date-picker>
+    <div
+      class="image"
+      :style="backStyle"
+    ></div>
 
-    <el-button
-      style="margin-left: 10px"
-      size="mini"
-      type="primary"
-      @click="handleDownload"
-      >下载</el-button
-    >
+    <div class="options">
+      <el-tooltip
+        effect="dark"
+        content="<-键盘翻页"
+        placement="top-start"
+        :disabled="disabled"
+      >
+        <el-button
+          style="margin-right: 10px"
+          size="mini"
+          type="default"
+          @click="handleBefore"
+        >
+          <i class="el-icon-arrow-left"></i>
+          前一天</el-button
+        ></el-tooltip
+      >
 
-    <div v-loading="loading">
-      <div class="headline">{{ detail.headline }}</div>
-      <div class="title">{{ detail.title }}</div>
-      <div class="main_text">{{ detail.main_text }}</div>
-      <div class="description">{{ detail.description }}</div>
+      <el-date-picker
+        style="width: 140px"
+        v-model="date"
+        type="date"
+        placeholder="日期"
+        size="mini"
+        clearable
+        :editable="false"
+        format="yyyy-MM-dd"
+        value-format="yyyy/MM/dd"
+        @change="getData"
+      >
+      </el-date-picker>
 
-      <img
-        :src="detail.image_url"
-        class="image"
-        alt=""
-        srcset=""
-      />
+      <el-tooltip
+        effect="dark"
+        content="键盘翻页->"
+        placement="top-start"
+        :disabled="disabled"
+      >
+        <el-button
+          style="margin-left: 10px"
+          size="mini"
+          type="default"
+          @click="handleNext"
+        >
+          后一天
+          <i class="el-icon-arrow-right"></i
+        ></el-button>
+      </el-tooltip>
+
+      <el-button
+        style="margin-left: auto"
+        size="mini"
+        type="default"
+        @click="handleDownload"
+      >
+        <i class="el-icon-download"></i>
+        下载</el-button
+      >
+    </div>
+
+    <div class="description-wrap">
+      <div class="description__header">
+        <span class="title">《{{ detail.headline }}》{{ detail.title }}</span>
+        <span class="description__view"
+          ><i class="el-icon-view"></i> {{ viewCount }}</span
+        >
+      </div>
+
+      <div class="description">
+        {{ detail.main_text }}{{ detail.description }}
+      </div>
     </div>
   </div>
 </template>
@@ -47,30 +89,93 @@ export default {
   data() {
     return {
       // tableData,
+      disabled: false,
       loading: true,
       date: dayjs().subtract(1, 'day').format('YYYY/MM/DD'),
       detail: {},
+      viewCount: 0,
     }
   },
 
-  computed() {},
+  computed: {
+    backStyle() {
+      if (this.detail && this.detail.image_url) {
+        return {
+          'background-image': `url("${this.detail.image_url}")`,
+        }
+      } else {
+        return {}
+      }
+    },
+  },
 
   methods: {
     async getData() {
       this.loading = true
 
-      const res = await axios.get(
-        `https://mouday.github.io/wallpaper-database/${this.date}.json`
-      )
-      // console.log(res.data)
+      try {
+        const res = await axios.get(
+          `https://mouday.github.io/wallpaper-database/${this.date}.json`
+        )
 
-      this.detail = res.data
-      this.loading = false
+        console.log(res)
+
+        this.detail = res.data
+        this.handleViewCount(this.date)
+      } catch (e) {
+        console.log(e)
+        this.$message.error('数据不存在')
+      } finally {
+        this.loading = false
+      }
     },
 
     handleDownload() {
       FileSaver.saveAs(this.detail.image_url)
     },
+
+    handleBefore() {
+      this.date = dayjs(this.date).subtract(1, 'day').format('YYYY/MM/DD')
+      this.getData()
+      this.disabled = true
+    },
+
+    handleNext() {
+      this.date = dayjs(this.date).add(1, 'day').format('YYYY/MM/DD')
+      this.getData()
+      this.disabled = true
+    },
+
+    handleKeyDown(e) {
+      if (e.key == 'ArrowRight') {
+        this.handleNext()
+      } else if (e.key == 'ArrowLeft') {
+        this.handleBefore()
+      }
+    },
+
+    handleViewCount(date) {
+      let viewCount = localStorage.getItem(date)
+
+      if (!viewCount) {
+        viewCount = Number.parseInt(1000 * Math.random() + 5000)
+      } else {
+        viewCount = parseInt(viewCount) + 1
+      }
+
+      localStorage.setItem(date, viewCount)
+
+      this.viewCount = viewCount
+    },
+  },
+
+  mounted() {
+    window.addEventListener('keydown', this.handleKeyDown)
+  },
+
+  // 卸载
+  beforeDestroy() {
+    window.removeEventListener('keydown', this.handleKeyDown)
   },
 
   created() {
