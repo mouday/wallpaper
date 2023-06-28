@@ -64,7 +64,7 @@
           下载</el-button
         >
         <el-button
-          style="margin-left: 10px;"
+          style="margin-left: 10px"
           size="mini"
           type="default"
           @click="handleGithub"
@@ -101,7 +101,7 @@ export default {
       // tableData,
       disabled: false,
       loading: true,
-      date: dayjs().subtract(1, 'day').format('YYYY/MM/DD'),
+      date: dayjs().format('YYYY/MM/DD'),
       detail: {},
       viewCount: 0,
     }
@@ -120,9 +120,20 @@ export default {
   },
 
   methods: {
+    async initData() {
+      let isSuccess = await this.getData()
+
+      // 如果未成功，取前一天数据
+      if (!isSuccess) {
+        this.date = dayjs().subtract(1, 'day').format('YYYY/MM/DD')
+        this.getData()
+      }
+    },
+
     async getData() {
       this.loading = true
 
+      let isSuccess = false
       try {
         const res = await axios.get(
           `https://mouday.github.io/wallpaper-database/${this.date}.json`
@@ -132,12 +143,15 @@ export default {
 
         this.detail = res.data
         this.handleViewCount(this.date)
+        isSuccess = true
       } catch (e) {
         console.log(e)
         this.$message.error('数据不存在')
       } finally {
         this.loading = false
       }
+
+      return isSuccess
     },
 
     handleDownload() {
@@ -193,7 +207,7 @@ export default {
   },
 
   created() {
-    this.getData()
+    this.initData()
   },
 }
 </script>
