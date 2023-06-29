@@ -104,6 +104,7 @@ export default {
       date: dayjs().format('YYYY/MM/DD'),
       detail: {},
       viewCount: 0,
+      showMessage: false,
     }
   },
 
@@ -128,6 +129,7 @@ export default {
         this.date = dayjs().subtract(1, 'day').format('YYYY/MM/DD')
         this.getData()
       }
+      this.showMessage = true
     },
 
     async getData() {
@@ -146,7 +148,9 @@ export default {
         isSuccess = true
       } catch (e) {
         console.log(e)
-        this.$message.error('数据不存在')
+        if (this.showMessage) {
+          this.$message.error('数据不存在')
+        }
       } finally {
         this.loading = false
       }
