@@ -124,12 +124,14 @@ export default {
     async initData() {
       let isSuccess = await this.getData()
 
+      this.showMessage = true
+      
       // 如果未成功，取前一天数据
       if (!isSuccess) {
         this.date = dayjs().subtract(1, 'day').format('YYYY/MM/DD')
         this.getData()
       }
-      this.showMessage = true
+      
     },
 
     async getData() {
