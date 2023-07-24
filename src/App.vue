@@ -58,6 +58,14 @@
         <el-button
           size="mini"
           type="default"
+          @click="handleCopy"
+        >
+          <i class="el-icon-document-copy"></i>
+          复制</el-button
+        >
+        <el-button
+          size="mini"
+          type="default"
           @click="handleDownload"
         >
           <i class="el-icon-download"></i>
@@ -95,6 +103,8 @@ import dayjs from 'dayjs'
 import axios from 'axios'
 import FileSaver from 'file-saver'
 
+import { urlToBase64Async, copyImageToClipboard } from './image-util.js'
+
 export default {
   data() {
     return {
@@ -125,13 +135,12 @@ export default {
       let isSuccess = await this.getData()
 
       this.showMessage = true
-      
+
       // 如果未成功，取前一天数据
       if (!isSuccess) {
         this.date = dayjs().subtract(1, 'day').format('YYYY/MM/DD')
         this.getData()
       }
-      
     },
 
     async getData() {
@@ -160,8 +169,11 @@ export default {
       return isSuccess
     },
 
-    handleDownload() {
-      FileSaver.saveAs(this.detail.image_url)
+    async handleDownload() {
+      // FileSaver.saveAs(this.detail.image_url)
+      // this.downloadIamge(this.detail.image_url)
+      const base64Data = await urlToBase64Async(this.detail.image_url)
+      FileSaver.saveAs(base64Data, `${this.date}.png`)
     },
 
     handleBefore() {
@@ -200,6 +212,11 @@ export default {
 
     handleGithub() {
       window.open('https://github.com/mouday/wallpaper', '_blank')
+    },
+
+    async handleCopy() {
+      await copyImageToClipboard(this.detail.image_url)
+      this.$message.success('已复制到剪切板')
     },
   },
 

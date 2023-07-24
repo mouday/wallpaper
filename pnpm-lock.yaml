@@ -3,6 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@vue/cli-service': ~5.0.0
   axios: ^1.1.3
+  copy-to-clipboard: ^3.3.3
   dayjs: ^1.11.5
   element-ui: ^2.15.10
   file-saver: ^2.0.5
@@ -13,6 +14,7 @@ specifiers:
 
 dependencies:
   axios: 1.1.3
+  copy-to-clipboard: 3.3.3
   dayjs: 1.11.5
   element-ui: 2.15.10_vue@2.7.13
   file-saver: 2.0.5
@@ -1481,6 +1483,12 @@ packages:
     dependencies:
       is-what: 3.14.1
     dev: true
+
+  /copy-to-clipboard/3.3.3:
+    resolution: {integrity: sha512-2KV8NhB5JqC3ky0r9PMCAZKbUHSwtEo4CwCs0KXgruG43gX5PMqDEBbVU4OUzw2MuAWUfsuFmWvEKG5QRfSnJA==}
+    dependencies:
+      toggle-selection: 1.0.6
+    dev: false
 
   /copy-webpack-plugin/9.1.0_webpack@5.74.0:
     resolution: {integrity: sha512-rxnR7PaGigJzhqETHGmAcxKnLZSR5u1Y3/bcIv/1FnqXedcL/E2ewK7ZCNrArJKCiSv8yVXhTqetJh8inDvfsA==}
@@ -4401,6 +4409,10 @@ packages:
     dependencies:
       is-number: 7.0.0
     dev: true
+
+  /toggle-selection/1.0.6:
+    resolution: {integrity: sha512-BiZS+C1OS8g/q2RRbJmy59xpyghNBqrr6k5L/uKBGRsTfxmu3ffiRnd8mlGPUVayg8pvfi5urfnu8TU7DVOkLQ==}
+    dev: false
 
   /toidentifier/1.0.1:
     resolution: {integrity: sha512-o5sSPKEkg/DIQNmH43V0/uerLrpzVedkUh8tGNvaeXpfpuwjKenlSox/2O/BTlZUtEe+JG7s5YhEz608PlAHRA==}
